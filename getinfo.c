@@ -1,62 +1,52 @@
-nclude "shell.h"
-
-
+#include "shell.h"
 
 /**
- *
- *  * clear_info - initializes info_t struct
- *
- *   * @info: struct address
- *
- *    */
-
-void clear_info(info_t *info)
-
+ * get_environ - returns the string array copy of our environ
+ * @info: Structure containing potential arguments. Used to maintain
+ *          constant function prototype.
+ * Return: Always 0
+ */
+char **get_environ(info_t *info)
 {
+	if (!info->environ || info->env_changed)
+	{
+		info->environ = list_to_strings(info->env);
+		info->env_changed = 0;
+	}
 
-		info->arg = NULL;
-
-			info->argv = NULL;
-
-				info->path = NULL;
-
-					info->argc = 0;
-
+	return (info->environ);
 }
 
-
-
 /**
- *
- *  * set_info - initializes info_t struct
- *
- *   * @info: struct address
- *
- *    * @av: argument vector
- *
- *     */
-
-void set_info(info_t *info, char **av)
-
+ * _unsetenv - Remove an environment variable
+ * @info: Structure containing potential arguments. Used to maintain
+ *        constant function prototype.
+ *  Return: 1 on delete, 0 otherwise
+ * @var: the string env var property
+ */
+int _unsetenv(info_t *info, char *var)
 {
+	list_t *node = info->env;
+	size_t i = 0;
+	char *p;
 
-		int i = 0;
+	if (!node || !var)
+		return (0);
 
-
-
-			info->fname = av[0];
-
-				if (info->arg)
-
-						{
-
-									info->argv = strtow(info->arg, " \t");
-
-											if (!info->argv)
-
-														{
-
-																		info->argv = malloc(sizeof(char *) * 2);
+	while (node)
+	{
+		p = starts_with(node->str, var);
+		if (p && *p == '=')
+		{
+			info->env_changed = delete_node_at_index(&(info->env), i);
+			i = 0;
+			node = info->env;
+			continue;
+		}
+		node = node->next;
+		i++;
+	}
+	return (info->env_changed);
 
 																					if (info->argv)
 
