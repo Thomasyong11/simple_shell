@@ -43,120 +43,40 @@ int hsh(info_t *info, char **av)
 	return (builtin_ret);
 }
 
-
-
-
 /**
+ * find_builtin - finds a builtin command
+ * @info: the parameter & return info struct
  *
- *  * find_builtin - finds a builtin command
- *
- *   * @info: the parameter & return info struct
- *
- *    *
- *
- *     * Return: -1 if builtin not found,
- *
- *      * 	0 if builtin executed successfully,
- *
- *       * 	1 if builtin found but not successful,
- *
- *        * 	2 if builtin signals exit()
- *
- *         */
-
+ * Return: -1 if builtin not found,
+ * 	0 if builtin executed successfully,
+ * 	1 if builtin found but not successful,
+ * 	2 if builtin signals exit()
+ */
 int find_builtin(info_t *info)
-
 {
+	int i, built_in_ret = -1;
+	builtin_table builtintbl[] = {
+		{"exit", _myexit},
+		{"env", _myenv},
+		{"help", _myhelp},
+		{"history", _myhistory},
+		{"setenv", _mysetenv},
+		{"unsetenv", _myunsetenv},
+		{"cd", _mycd},
+		{"alias", _myalias},
+		{NULL, NULL}
+	};
 
-		int i, built_in_ret = -1;
-
-			builtin_table builtintbl[] = {
-
-						{"exit", _myexit},
-
-								{"env", _myenv},
-
-										{"help", _myhelp},
-
-												{"history", _myhistory},
-
-														{"setenv", _mysetenv},
-
-																{"unsetenv", _myunsetenv},
-
-																		{"cd", _mycd},
-
-																				{"alias", _myalias},
-
-																						{NULL, NULL}
-
-							};
-
-
-
-				for (i = 0; builtintbl[i].type; i++)
-
-							if (_strcmp(info->argv[0], builtintbl[i].type) == 0)
-
-										{
-
-														info->line_count++;
-
-																	built_in_ret = builtintbl[i].func(info);
-
-																				break;
-
-																						}
-
-					return (built_in_ret);
-
+	for (i = 0; builtintbl[i].type; i++)
+		if (_strcmp(info->argv[0], builtintbl[i].type) == 0)
+		{
+			info->line_count++;
+			built_in_ret = builtintbl[i].func(info);
+			break;
+		}
+	return (built_in_ret);
 }
 
-
-
-/**
- *
- *  * find_cmd - finds a command in PATH
- *
- *   * @info: the parameter & return info struct
- *
- *    *
- *
- *     * Return: void
- *
- *      */
-
-void find_cmd(info_t *info)
-
-{
-
-		char *path = NULL;
-
-			int i, k;
-
-
-
-				info->path = info->argv[0];
-
-					if (info->linecount_flag == 1)
-
-							{
-
-										info->line_count++;
-
-												info->linecount_flag = 0;
-
-													}
-
-						for (i = 0, k = 0; info->arg[i]; i++)
-
-									if (!is_delim(info->arg[i], " \t\n"))
-
-													k++;
-
-							if (!k)
-
-										return;
 
 
 
