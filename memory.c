@@ -9,14 +9,13 @@
 int bfree(void **ptr)
 {
 	if (ptr && *ptr)
-
-
-											return (1);
-
-												}
-
-			return (0);
-
+	{
+		free(*ptr);
+		*ptr = NULL;
+		return (1);
+	}
+	return (0);
 }
+
 
 
