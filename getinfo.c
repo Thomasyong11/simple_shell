@@ -47,60 +47,34 @@ int _unsetenv(info_t *info, char *var)
 		i++;
 	}
 	return (info->env_changed);
-
-																					if (info->argv)
-
-																									{
-
-																														info->argv[0] = _strdup(info->arg);
-
-																																		info->argv[1] = NULL;
-
-																																					}
-
-																							}
-
-													for (i = 0; info->argv && info->argv[i]; i++)
-
-																	;
-
-															info->argc = i;
-
-
-
-																	replace_alias(info);
-
-																			replace_vars(info);
-
-																				}
-
 }
 
-
-
 /**
- *
- *  * free_info - frees info_t struct fields
- *
- *   * @info: struct address
- *
- *    * @all: true if freeing all fields
- *
- *     */
-
-void free_info(info_t *info, int all)
-
+ * _setenv - Initialize a new environment variable,
+ *             or modify an existing one
+ * @info: Structure containing potential arguments. Used to maintain
+ *        constant function prototype.
+ * @var: the string env var property
+ * @value: the string env var value
+ *  Return: Always 0
+ */
+int _setenv(info_t *info, char *var, char *value)
 {
+	char *buf = NULL;
+	list_t *node;
+	char *p;
 
-		ffree(info->argv);
+	if (!var || !value)
+		return (0);
 
-			info->argv = NULL;
-
-				info->path = NULL;
-
-					if (all)
-
-							{
+	buf = malloc(_strlen(var) + _strlen(value) + 2);
+	if (!buf)
+		return (1);
+	_strcpy(buf, var);
+	_strcat(buf, "=");
+	_strcat(buf, value);
+	node = info->env;
+	while (node)
 
 										if (!info->cmd_buf)
 
